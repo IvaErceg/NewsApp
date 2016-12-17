@@ -4,13 +4,14 @@ public class News {
     private String mTitle;
     private String mCategory;
     private String mUrl;
-    public News(String title, String category, String url){
+
+    public News(String title, String category, String url) {
         mTitle = title;
         mCategory = category;
         mUrl = url;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return mTitle;
     }
 

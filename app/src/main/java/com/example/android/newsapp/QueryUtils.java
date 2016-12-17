@@ -19,23 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper methods related to requesting and receiving earthquake data from USGS.
+ * Helper methods related to requesting and receiving news data from Guardian API.
  */
 public final class QueryUtils {
-
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    /**
-     * Create a private constructor because no one should ever create a {@link QueryUtils} object.
-     * This class is only meant to hold static variables and methods, which can be accessed
-     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
-     */
     private QueryUtils() {
     }
 
     /**
-     * Query the USGS dataset and return a list of {@link News} objects.
+     * Query the Guardian dataset and return a list of {@link News} objects.
      */
     public static List<News> fetchNewsData(String requestUrl) {
         // Create URL object
@@ -137,7 +133,6 @@ public final class QueryUtils {
         if (TextUtils.isEmpty(newsJSON)) {
             return null;
         }
-
         // Create an empty ArrayList that we can start adding earthquakes to
         List<News> news = new ArrayList<>();
 
@@ -145,34 +140,27 @@ public final class QueryUtils {
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
-
             // Create a JSONObject from the JSON response string
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
             JSONObject response = baseJsonResponse.getJSONObject("response");
             JSONArray results = response.getJSONArray("results");
-            for(int i = 0; i<results.length();i++) {
+            for (int i = 0; i < results.length(); i++) {
                 JSONObject currentNews = results.getJSONObject(i);
                 String title = currentNews.getString("webTitle");
                 String category = currentNews.getString("sectionName");
                 String url = currentNews.getString("webUrl");
-
+                //create News object
                 News singleNews = new News(title, category, url);
-
-                // Add the new {@link Earthquake} to the list of earthquakes.
+                // Add single News object to the list of news.
                 news.add(singleNews);
-
             }
-
-
-            } catch (JSONException e) {
+        } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
-
         // Return the list of news
         return news;
     }
-
 }
